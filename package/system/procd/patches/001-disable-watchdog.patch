@@ -1,0 +1,30 @@
+--- a/initd/init.c
++++ b/initd/init.c
+@@ -80,7 +80,7 @@ main(int argc, char **argv)
+ 
+ 	early();
+ 	cmdline();
+-	watchdog_init(1);
++	//watchdog_init(1);
+ 
+ 	pid = fork();
+ 	if (!pid) {
+--- a/state.c
++++ b/state.c
+@@ -100,14 +100,14 @@ static void state_enter(void)
+ 	switch (state) {
+ 	case STATE_EARLY:
+ 		LOG("- early -\n");
+-		watchdog_init(0);
++		//watchdog_init(0);
+ 		hotplug("/etc/hotplug.json");
+ 		procd_coldplug();
+ 		break;
+ 
+ 	case STATE_UBUS:
+ 		// try to reopen incase the wdt was not available before coldplug
+-		watchdog_init(0);
++		//watchdog_init(0);
+ 		set_stdio("console");
+ 		LOG("- ubus -\n");
+ 		procd_connect_ubus();
