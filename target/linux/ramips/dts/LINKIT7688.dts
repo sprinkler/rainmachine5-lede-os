@@ -1,7 +1,6 @@
 /dts-v1/;
 
 #include "mt7628an.dtsi"
-
 #include <dt-bindings/input/input.h>
 
 / {
@@ -46,7 +45,7 @@
 		wps {
 			label = "reset";
 			gpios = <&gpio1 6 1>;
-			linux,code = <KEY_WPS_BUTTON>;
+			linux,code = <0x211>;
 		};
 	};
 
@@ -56,6 +55,10 @@
 		#size-cells = <0>;
 		gpio-controller;
 		#gpio-cells = <2>;
+	};
+
+	rmvalves {
+		compatible = "rmvalves";
 	};
 };
 
@@ -156,6 +159,65 @@
 
 &i2c {
 	status = "okay";
+
+	cap1114@28 {
+		compatible = "microchip,cap1114";
+		interrupt-parent = <&gpio1>;
+		interrupts = <37 0>;
+		#interrupts = <29 0>;
+		reg = <0x28>;
+		autorepeat;
+		microchip,sensor-gain = <2>;
+
+		linux,keycodes = <100>,
+				 <101>,
+				 <102>,
+				 <103>,
+				 <104>,
+				 <105>,
+				 <106>,
+				 <107>,
+				 <108>,
+				 <109>,
+				 <110>,
+				 <111>,
+				 <112>,
+				 <113>;
+
+		#address-cells = <1>;
+		#size-cells = <0>;
+
+		up@0 {
+			label = "cap11xx:white:up";
+			reg = <0>;
+		};
+
+		down@1 {
+			label = "cap11xx:white:down";
+			reg = <1>;
+		};
+
+		sprinkler@2 {
+			label = "cap11xx:white:sprinkler";
+			reg = <2>;
+		};
+
+		home@3 {
+			label = "cap11xx:white:home";
+			reg = <3>;
+		};
+
+		wifi@4 {
+			label = "cap11xx:white:wifi";
+			reg = <4>;
+		};
+	};
+
+	pcf8523@68 {
+		compatible = "nxp,pcf8523";
+		reg = <0x68>;
+		status = "okay";
+	};
 };
 
 &uart1 {
