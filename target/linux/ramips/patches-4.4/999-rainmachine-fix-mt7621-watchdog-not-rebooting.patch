@@ -1,0 +1,57 @@
+--- a/drivers/watchdog/mt7621_wdt.c
++++ b/drivers/watchdog/mt7621_wdt.c
+@@ -23,13 +23,14 @@
+ #include <asm/mach-ralink/ralink_regs.h>
+ 
+ #define SYSC_RSTSTAT			0x38
++#define SYSC_GLBCTL			0x100
+ #define WDT_RST_CAUSE			BIT(1)
++#define WDT2RSTO_EN			BIT(30) /* Enable/Disable reset through reset pin */
+ 
+ #define RALINK_WDT_TIMEOUT		30
+ 
+-#define TIMER_REG_TMRSTAT		0x00
+-#define TIMER_REG_TMR1LOAD		0x24
+-#define TIMER_REG_TMR1CTL		0x20
++#define TIMER_REG_TMR1LOAD		0x04
++#define TIMER_REG_TMR1CTL		0x00
+ 
+ #define TMR1CTL_ENABLE			BIT(7)
+ #define TMR1CTL_RESTART			BIT(9)
+@@ -54,7 +55,7 @@ static inline u32 rt_wdt_r32(unsigned re
+ 
+ static int mt762x_wdt_ping(struct watchdog_device *w)
+ {
+-	rt_wdt_w32(TIMER_REG_TMRSTAT, TMR1CTL_RESTART);
++	rt_sysc_w32(TMR1CTL_RESTART, SYSC_GLBCTL);
+ 
+ 	return 0;
+ }
+@@ -71,6 +72,7 @@ static int mt762x_wdt_set_timeout(struct
+ static int mt762x_wdt_start(struct watchdog_device *w)
+ {
+ 	u32 t;
++	u32 r;
+ 
+ 	rt_wdt_w32(TIMER_REG_TMR1CTL, 1000 << 16);
+ 	mt762x_wdt_set_timeout(w, w->timeout);
+@@ -79,6 +81,11 @@ static int mt762x_wdt_start(struct watch
+ 	t |= TMR1CTL_ENABLE;
+ 	rt_wdt_w32(TIMER_REG_TMR1CTL, t);
+ 
++	r = rt_sysc_r32(SYSC_RSTSTAT);
++	r &= ~WDT2RSTO_EN;
++	rt_sysc_w32(r, SYSC_RSTSTAT);
++	r = rt_sysc_r32(SYSC_RSTSTAT);
++
+ 	return 0;
+ }
+ 
+@@ -129,6 +136,7 @@ static int mt762x_wdt_probe(struct platf
+ 
+ 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+ 	mt762x_wdt_base = devm_ioremap_resource(&pdev->dev, res);
++
+ 	if (IS_ERR(mt762x_wdt_base))
+ 		return PTR_ERR(mt762x_wdt_base);
+ 
