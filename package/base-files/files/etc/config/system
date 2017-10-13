@@ -1,5 +1,5 @@
 config system
-	option hostname	RainMachine
+	option hostname	RainMachine5
 	option timezone	UTC
 
 config timeserver ntp

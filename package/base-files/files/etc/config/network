@@ -10,12 +10,13 @@ config globals 'globals'
         option ula_prefix 'fd58:7806:b595::/48'
 
 config interface 'lan'
-        option type 'bridge'
+#        option type 'bridge'
         option ifname 'eth0'
-        option proto 'static'
+        option proto 'dhcp'
         option ipaddr '192.168.1.1'
         option netmask '255.255.255.0'
         option ip6assign '60'
+
 
 config device 'lan_dev'
         option name 'eth0'
@@ -28,3 +29,10 @@ config switch
 
 config interface 'wifi'
         option proto 'dhcp'
+
+config interface 'ap'
+        option ifname 'ra0'
+        option proto 'static'
+        option ipaddr '192.168.13.1'
+        option netmask '255.255.255.0'
+        option ip6assign '60'
