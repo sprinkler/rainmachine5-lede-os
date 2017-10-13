@@ -1,0 +1,11 @@
+--- a/arch/mips/ralink/mt7620.c
++++ b/arch/mips/ralink/mt7620.c
+@@ -273,7 +273,7 @@ static struct rt2880_pmx_func wled_an_gr
+ 	FUNC("rsvd", 3, 44, 1),
+ 	FUNC("rsvd", 2, 44, 1),
+ 	FUNC("gpio", 1, 44, 1),
+-	FUNC("wled_an", 0, 44, 1),
++	FUNC("wled_an", 1, 44, 0),
+ };
+ 
+ #define MT7628_GPIO_MODE_MASK		0x3
