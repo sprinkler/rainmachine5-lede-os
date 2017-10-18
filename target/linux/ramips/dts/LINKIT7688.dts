@@ -34,6 +34,11 @@
 			gpios = <&gpio1 12 0>;
 			default-state = "on";
 		};
+		eth {
+			label = "rainmachine:orange:eth";
+			gpios = <&gpio0 22 0>;
+			default-state = "off";
+		};
 	};
 
 	gpio-keys-polled {
