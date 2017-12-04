@@ -1,6 +1,7 @@
 /dts-v1/;
 
 #include "mt7628an.dtsi"
+#include <dt-bindings/gpio/gpio.h>
 #include <dt-bindings/input/input.h>
 
 / {
@@ -37,6 +38,11 @@
 		eth {
 			label = "rainmachine:orange:eth";
 			gpios = <&gpio0 22 0>;
+			default-state = "off";
+		};
+		buzzer {
+			label = "buzzer";
+			gpios = <&gpio0 18 0>;
 			default-state = "off";
 		};
 	};
@@ -106,6 +112,11 @@
 
 		wdt {
 			ralink,group = "wdt";
+			ralink,function = "gpio";
+		};
+		
+		pwm0 {
+			ralink,group = "gpio";
 			ralink,function = "gpio";
 		};
 	};
