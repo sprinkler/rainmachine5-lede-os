@@ -27,6 +27,11 @@ config switch
         option reset '1'
         option enable_vlan '0'
 
+config switch_port
+        option device 'rt305x'
+        option port '0'
+        option led '0'
+
 config interface 'wifi'
         option proto 'dhcp'
 
