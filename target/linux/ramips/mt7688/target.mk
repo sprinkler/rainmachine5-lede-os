@@ -6,7 +6,7 @@ SUBTARGET:=mt7688
 BOARDNAME:=MT7688 based boards
 FEATURES+=usb
 CPU_TYPE:=24kc
-
+FILESYSTEMS := squashfs jffs2-64k jffs2-128k
 DEFAULT_PACKAGES += kmod-mt76
 
 define Target/Description

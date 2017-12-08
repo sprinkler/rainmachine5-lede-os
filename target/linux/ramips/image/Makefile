@@ -7,6 +7,8 @@
 include $(TOPDIR)/rules.mk
 include $(INCLUDE_DIR)/image.mk
 
+JFFS2_BLOCKSIZE=128k 64k
+
 define imgname
 $(BIN_DIR)/$(IMG_PREFIX)-$(2)-$(1)
 endef
@@ -35,11 +37,13 @@ define Device/Default
   PROFILES = Default $$(DTS)
   KERNEL_DEPENDS = $$(wildcard ../dts/$$(DTS).dts)
   KERNEL := $(KERNEL_DTB) | uImage lzma
+  KERNEL_SIZE := 2048k
   IMAGES := sysupgrade.bin
   IMAGE_SIZE := $(ralink_default_fw_size_8M)
   SUPPORTED_DEVICES = $(1)
   sysupgrade_bin := append-kernel | append-rootfs | pad-rootfs
-  IMAGE/sysupgrade.bin := append-kernel | append-rootfs | pad-rootfs | append-metadata | check-size $$$$(IMAGE_SIZE)
+# IMAGE/sysupgrade.bin := append-kernel | append-rootfs | pad-rootfs | append-metadata | check-size $$$$(IMAGE_SIZE)
+  IMAGE/sysupgrade.bin = append-kernel | pad-to $$$$(KERNEL_SIZE) | append-rootfs | pad-rootfs | check-size $$$$(IMAGE_SIZE)
 endef
 
 define Build/patch-dtb
@@ -248,6 +252,11 @@ define Image/Build/Profile
 	$(if $(CONFIG_TARGET_ROOTFS_INITRAMFS),$(call Image/Build/Profile/$(1),initramfs))
 	$(call Image/Build/Profile/$(1),$(2))
 endef
+
+#define Image/cmdline/jffs2
+#	root=/dev/mtdblock3 rootfstype=jffs2
+#endef
+
 
 endif
 
