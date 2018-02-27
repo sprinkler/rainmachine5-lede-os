@@ -1,0 +1,63 @@
+--- a/drivers/mtd/devices/m25p80.c
++++ b/drivers/mtd/devices/m25p80.c
+@@ -27,12 +27,41 @@
+ #include <linux/spi/flash.h>
+ #include <linux/mtd/spi-nor.h>
+ 
++#include <linux/sysfs.h>
++
+ #define	MAX_CMD_SIZE		6
+ struct m25p {
+ 	struct spi_device	*spi;
+ 	struct spi_nor		spi_nor;
+ 	u8			command[MAX_CMD_SIZE];
+ };
++static char                    udid[20];
++
++static const struct spi_device_id *udid_read(struct spi_device *spi)
++{
++       int                     tmp;
++       u8                      code[5] = {0x4b, 0x00, 0x00, 0x00, 0x00 };
++       u8                      id[8];
++
++       tmp = spi_write_then_read(spi, &code, 5, id, 8);
++       if (tmp < 0) {
++               pr_info("%s: error %d reading UDID\n",
++                               dev_name(&spi->dev), tmp);
++               return ERR_PTR(tmp);
++       }
++
++       snprintf(udid, sizeof(udid), "%02X%02X%02X%02X%02X%02X%02X%02X", id[0], id[1], id[2], id[3], id[4], id[5], id[6], id[7]);
++       pr_info("%s: UDID: %s\n", dev_name(&spi->dev), udid);
++
++       return 0;
++}
++
++static ssize_t machine_udid_show(struct device *dev, struct device_attribute *attr, char *buf)
++{
++       return snprintf(buf, PAGE_SIZE, "%s", udid);
++}
++
++DEVICE_ATTR(machine_udid, 0444, machine_udid_show, NULL);
+ 
+ static int m25p80_read_reg(struct spi_nor *nor, u8 code, u8 *val, int len)
+ {
+@@ -251,9 +280,17 @@ static int m25p_probe(struct spi_device
+ 
+ 	ppdata.of_node = spi->dev.of_node;
+ 
+-	return mtd_device_parse_register(&nor->mtd, NULL, &ppdata,
++	/* create simple sysfs file to show the UDID */
++	device_create_file(nor->dev, &dev_attr_machine_udid);
++
++	ret = mtd_device_parse_register(&nor->mtd, NULL, &ppdata,
+ 			data ? data->parts : NULL,
+ 			data ? data->nr_parts : 0);
++
++	if (!ret)
++		udid_read(spi);
++
++	return ret;
+ }
+ 
+ 
