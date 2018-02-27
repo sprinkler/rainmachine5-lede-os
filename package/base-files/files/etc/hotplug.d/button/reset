@@ -1,0 +1,46 @@
+#!/bin/sh
+
+[ "${ACTION}" = "released" ] || exit 0
+
+. /lib/functions.sh
+
+logger "$BUTTON pressed for $SEEN seconds"
+
+if [ "$SEEN" -lt 1 ]
+then
+        echo "REBOOT" > /dev/console
+        echo 1 > /sys/class/leds/buzzer/brightness
+        #Stop all valves on reboot
+        for i in $(seq 200 222); do echo 0 > /sys/class/gpio/gpio$i/value; done
+
+        #Close wlan led
+        echo 0 > /sys/class/leds/rainmachine:white:wifi/brightness
+        echo 0 > /sys/class/leds/buzzer/brightness
+        sync
+        reboot
+elif [ "$SEEN" -gt 3 -a "$SEEN" -lt 13 ]
+then
+        echo "FACTORY RESET" > /dev/console
+        #Beep
+        echo 1 > /sys/class/leds/buzzer/brightness
+        sleep 1
+        echo 0 > /sys/class/leds/buzzer/brightness
+        #Close wlan led
+        echo 0 > /sys/class/leds/rainmachine:white:wifi/brightness
+        #Reboot animation
+        #/usr/sbin/rainmachine-led-anim /etc/rainmachine-boot-animation.conf &
+        touch /tmp/factory-reset
+elif [ "$SEEN" -gt 14 ]
+then
+        echo "RESET TO DEFAULTS" > /dev/console
+        #Beep
+        echo 1 > /sys/class/leds/buzzer/brightness
+        sleep 1 
+        echo 0 > /sys/class/leds/buzzer/brightness
+        echo 1 > /sys/class/leds/buzzer/brightness
+        sleep 2
+        echo 0 > /sys/class/leds/buzzer/brightness
+        rm -rvf /rainmachine-app/DB/
+        sync
+        reboot
+fi
