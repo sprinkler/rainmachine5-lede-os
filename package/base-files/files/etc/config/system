@@ -10,22 +10,24 @@ config timeserver ntp
 	option enabled 1
 	option enable_server 0
 
-config 'led'
-        option 'name'           'ap'
-        option 'sysfs'          'rainmachine:white:wifi'
-        option 'trigger'        'phy0assoc'
-        option 'dev'            'ra0'
+# Handled by ap_client
+#config 'led'
+#        option 'name'           'ap'
+#        option 'sysfs'          'rainmachine:white:wifi'
+#        option 'trigger'        'phy0assoc'
+#        option 'dev'            'ra0'
 
-config 'led'
-        option 'name'           'sta'
-        option 'sysfs'          'rainmachine:white:wifi'
-        option 'trigger'        'netdev'
-        option 'dev'            'apcli0'
-        option 'mode'           'link'
+# Handled by ap_client
+#config 'led'
+#        option 'name'           'sta'
+#        option 'sysfs'          'rainmachine:white:wifi'
+#        option 'trigger'        'netdev'
+#        option 'dev'            'apcli0'
+#        option 'mode'           'link'
 
 config 'led'
         option 'name'           'eth'
         option 'sysfs'          'rainmachine:orange:eth'
         option 'trigger'        'netdev'
         option 'dev'            'eth0'
-        option 'mode'           'tx,rx'
+        option 'mode'           'rx'
