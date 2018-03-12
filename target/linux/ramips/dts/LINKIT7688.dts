@@ -53,7 +53,7 @@
 		#size-cells = <0>;
 		poll-interval = <20>;
 
-		wps {
+		reset {
 			label = "reset";
 			gpios = <&gpio1 6 1>;
 			linux,code = <0x211>;
