@@ -178,7 +178,7 @@ default_prerm() {
 			if [ "$PKG_UPGRADE" != "1" ]; then
 				"$i" disable
 			fi
-			"$i" stop || /bin/true
+#			"$i" stop || /bin/true
 		fi
 	done
 }
@@ -255,7 +255,7 @@ default_postinst() {
 			if [ "$PKG_UPGRADE" != "1" ]; then
 				"$i" enable
 			fi
-			"$i" start
+#			"$i" start
 		fi
 	done
 
