@@ -71,6 +71,10 @@
 	rmvalves {
 		compatible = "rmvalves";
 	};
+
+	rmsensor {
+		compatible = "rmsensor";
+	};
 };
 
 &pinctrl {

@@ -9,6 +9,7 @@ logger "$BUTTON pressed for $SEEN seconds"
 if [ "$SEEN" -lt 1 ]
 then
         echo "REBOOT" > /dev/console
+	/sbin/rainmachine5-boot-anim -r &
         echo 1 > /sys/class/leds/buzzer/brightness
         #Stop all valves on reboot
         for i in $(seq 200 222); do echo 0 > /sys/class/gpio/gpio$i/value; done
@@ -20,7 +21,8 @@ then
         reboot
 elif [ "$SEEN" -gt 3 -a "$SEEN" -lt 13 ]
 then
-        echo "FACTORY RESET" > /dev/console
+	echo "AUTH RESET" > /dev/console
+	/sbin/rainmachine5-boot-anim -r &
         #Beep
         echo 1 > /sys/class/leds/buzzer/brightness
         sleep 1
@@ -33,12 +35,13 @@ then
 elif [ "$SEEN" -gt 14 ]
 then
         echo "RESET TO DEFAULTS" > /dev/console
+	/sbin/rainmachine5-boot-anim -r &
         #Beep
         echo 1 > /sys/class/leds/buzzer/brightness
         sleep 1 
         echo 0 > /sys/class/leds/buzzer/brightness
         echo 1 > /sys/class/leds/buzzer/brightness
-        sleep 2
+        sleep 1
         echo 0 > /sys/class/leds/buzzer/brightness
         rm -rvf /rainmachine-app/DB/
         sync
