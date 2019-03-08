@@ -8,7 +8,7 @@ AWS_SYNC=0
 PACKAGES_DIR="bin/targets/ramips/mt7688/packages"
 LAN_UPDATE_DIR="/mnt/rainmachine-updates/rainmachine5"
 LAN_IMAGE_DIR="/mnt/rainmachine-updates/sprinkler5"
-IMAGE_17_VALVES="rainmachine5-17.01.0-r3205-59508e3-ramips-mt7688-LinkIt7688-jffs2-64k-sysupgrade.bin"
+IMAGE_9_VALVES="rainmachine5-17.01.0-r3205-59508e3-ramips-mt7688-LinkIt7688-jffs2-64k-sysupgrade.bin"
 
 BUILD_ID=$(date +%s)
 DATESTR=$(date +%F)
@@ -19,8 +19,8 @@ if [ $BUILD_CLEAN -eq 1 ]; then
     #make clean
 fi
 if [ $BUILD -eq 1 ]; then
-    echo "Building RainMachine5"
-    make V=s > build.log 2>&1
+    echo "Building RainMachine5 9 valves version"
+    make V=s > build_9valves.log 2>&1
 fi
 
 if [ $? -ne 0 ]; then
@@ -37,11 +37,11 @@ else
     rm ${LAN_UPDATE_DIR}/*
     echo " * Sync packages to LAN"
     cp -a ${PACKAGES_DIR}/* ${LAN_UPDATE_DIR}
-    echo " * Sync 17 valves image to LAN"
-    cp -a bin/targets/ramips/mt7688/${IMAGE_17_VALVES} ${LAN_IMAGE_DIR}/17valves/lks7688_16valves_${DATESTR}.img
+    echo " * Sync 8 valves image to LAN"
+    cp -a bin/targets/ramips/mt7688/${IMAGE_9_VALVES} ${LAN_IMAGE_DIR}/9valves/lks7688_9valves_${DATESTR}.img
     if [ $SYNC_FACTORY -eq 1 ]; then
-	echo " * Sync 17 valves factory image to LAN"
-	cp -a bin/targets/ramips/mt7688/${IMAGE_17_VALVES} ${LAN_IMAGE_DIR}/17valves/factory/lks7688_16valves_${DATESTR}.img
+	echo " * Sync 9 valves factory image to LAN"
+	cp -a bin/targets/ramips/mt7688/${IMAGE_17_VALVES} ${LAN_IMAGE_DIR}/9valves/factory/lks7688_9valves_${DATESTR}.img
     fi
 fi
 
