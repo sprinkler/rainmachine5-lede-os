@@ -2,8 +2,8 @@
 
 BUILD=1
 BUILD_CLEAN=1
-SYNC_FACTORY=0
-AWS_SYNC=0
+SYNC_FACTORY=1
+AWS_SYNC=1
 
 PACKAGES_DIR="bin/targets/ramips/mt7688/packages"
 LAN_UPDATE_DIR="/mnt/rainmachine-updates/rainmachine5"

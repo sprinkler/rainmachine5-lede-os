@@ -2,7 +2,7 @@
 
 BUILD=1
 BUILD_CLEAN=1
-SYNC_FACTORY=0
+SYNC_FACTORY=1
 AWS_SYNC=0
 
 PACKAGES_DIR="bin/targets/ramips/mt7688/packages"
@@ -20,6 +20,10 @@ if [ $BUILD_CLEAN -eq 1 ]; then
 fi
 if [ $BUILD -eq 1 ]; then
     echo "Building RainMachine5 9 valves version"
+    echo "Make sure you select 9 Valves in Config > RainMachine > Apps > Configuration"
+    echo "Press any key to start menuconfig ..."
+    read anykey
+    make menuconfig
     make V=s > build_9valves.log 2>&1
 fi
 
@@ -41,7 +45,7 @@ else
     cp -a bin/targets/ramips/mt7688/${IMAGE_9_VALVES} ${LAN_IMAGE_DIR}/9valves/lks7688_9valves_${DATESTR}.img
     if [ $SYNC_FACTORY -eq 1 ]; then
 	echo " * Sync 9 valves factory image to LAN"
-	cp -a bin/targets/ramips/mt7688/${IMAGE_17_VALVES} ${LAN_IMAGE_DIR}/9valves/factory/lks7688_9valves_${DATESTR}.img
+	cp -a bin/targets/ramips/mt7688/${IMAGE_9_VALVES} ${LAN_IMAGE_DIR}/9valves/factory/lks7688_9valves_${DATESTR}.img
     fi
 fi
 
